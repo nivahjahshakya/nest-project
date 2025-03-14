@@ -6,7 +6,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 import * as bcrypt from 'bcryptjs';
 import { SignInUserDto } from './dto/signin-user.dto';
-import { access } from 'fs';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
