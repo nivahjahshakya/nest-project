@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { JwtStrategy } from 'auth/strategy/jwt.strategy';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { AuthModule } from './auth/auth.module';
           rejectUnauthorized: false,
         },
         autoLoadEntities: true,
-        entities: [__dirname+'/**/*/entity{.ts,.js}'],
+        entities: [__dirname+'/**/*.entity{.ts,.js}'],
         logging:false
       })
     }),
@@ -28,6 +29,6 @@ import { AuthModule } from './auth/auth.module';
 
   ],
   controllers: [],
-  providers: [],
+  providers: [JwtStrategy],
 })
 export class AppModule {}
