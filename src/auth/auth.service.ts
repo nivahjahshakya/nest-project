@@ -24,6 +24,9 @@ export class AuthService {
     const hashedPassword = await bcrypt.hash(createUserDto.password, salt);
     newUser.password = hashedPassword;
 
+    if(createUserDto.role){
+      newUser.role = createUserDto.role;
+    }
     try {
       await this.userRepository.save(newUser);
       return 'User successfully created';
