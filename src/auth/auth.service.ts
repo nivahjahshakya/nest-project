@@ -9,6 +9,7 @@ import { SignInUserDto } from './dto/signin-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { NotFoundError } from 'rxjs';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -59,8 +60,8 @@ export class AuthService {
     }
   }
 
-  getUser(): Promise<User[]> {
-    return this.userRepository.find();
+  async getUser(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
   async findOne(_id:number):Promise<User>{
@@ -71,6 +72,49 @@ export class AuthService {
       throw new NotFoundException(`User with id ${_id} not found`)
     }
     return user
+  }
+
+  async updateUser(id:number, updatedUserDto: UpdateUserDto): Promise<User>{
+    const existingUser = await this.findOne(id)
+    if(!existingUser){
+      throw new NotFoundException(`User with id ${id} not found`)
+    }
+    existingUser.email = updatedUserDto.email ?? existingUser.email
+    existingUser.role = updatedUserDto.role ?? existingUser.role
+
+    const salt = await bcrypt.genSalt()
+    const hashedPassword = await bcrypt.hash(updatedUserDto.password, salt)
+    existingUser.password = hashedPassword
+
+    try{
+      return await this.userRepository.save(existingUser)
+    }catch(error){
+      throw new ConflictException('Email already exists')
+    }
+  }
+
+  async updatePassword(id:number, updatedPasswordDto: UpdatePasswordDto){
+    const existingUser = await this.findOne(id)
+    if(!existingUser){
+      throw new NotFoundException(`User with id ${id} not found`)
+    }
+    const IsValidPassword = await bcrypt.compare(
+      updatedPasswordDto.oldPassword,
+      existingUser.password,
+    );
+    if (IsValidPassword) {
+      const salt = await bcrypt.genSalt()
+      const hashedPassword = await bcrypt.hash(updatedPasswordDto.newPassword, salt)
+      existingUser.password = hashedPassword
+      try{
+        await this.userRepository.save(existingUser)
+      }catch(error){
+        throw new ConflictException('Email already exists')
+      }
+      return 'Password updated successfully'
+    }else{
+      throw new UnauthorizedException('Invalid login credentials')
+    }
   }
 
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignInUserDto } from './dto/signin-user.dto';
@@ -7,6 +7,8 @@ import { Roles } from './decorator/roles.decorator';
 import { Role } from './enum/role.enum';
 import { RolesGuard } from './guard/roles.guard';
 import { User } from './entity/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -16,7 +18,7 @@ export class AuthController {
     signin(@Body() signInUserDto: SignInUserDto):Promise<string>{
         return this.authService.signIn(signInUserDto)
     }
-    
+
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
     @Post('createuser')
@@ -44,6 +46,18 @@ export class AuthController {
         return this.authService.findOne(+id)
     }
 
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @Patch('updateuser/:id')
+    updateUser(@Param('id') id:string, @Body() updatedUserDto: UpdateUserDto){
+        return this.authService.updateUser(+id, updatedUserDto)
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Patch('updatepassword')
+    updatePassword(@Req() req, @Body() updatePasswordDto: UpdatePasswordDto){
+        return this.authService.updatePassword(+req.user.userId,updatePasswordDto)
+    }
 
 
 }
