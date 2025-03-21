@@ -23,6 +23,7 @@ import { RolesGuard } from './guard/roles.guard';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, RolesGuard],
+  exports: [AuthService, JwtStrategy, RolesGuard, TypeOrmModule],
 })
 export class AuthModule {}

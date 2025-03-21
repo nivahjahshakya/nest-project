@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JwtStrategy } from 'auth/strategy/jwt.strategy';
 import { LogginMiddleware } from './logging.middleware';
+import { TaskModule } from 'task/task.module';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { LogginMiddleware } from './logging.middleware';
       })
     }),
     AuthModule,
-    
+    TaskModule
   ],
   controllers: [],
   providers: [JwtStrategy],

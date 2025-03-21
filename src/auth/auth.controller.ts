@@ -21,7 +21,7 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
-    @Post('createuser')
+    @Post('create-user')
     createUser(@Body() createUserDto:CreateUserDto):Promise<string>{
         return this.authService.createUser(createUserDto)
     }
@@ -34,34 +34,34 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
-    @Get('getuser')
+    @Get('get-user')
     getUser():Promise<User[]>{
         return this.authService.getUser()
     }
 
     @UseGuards(JwtAuthGuard,RolesGuard)
     @Roles(Role.Admin)
-    @Get('getuser/:id')
+    @Get('get-user/:id')
     getUserById(@Param('id') id:string):Promise<User>{
         return this.authService.findOne(+id)
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
-    @Patch('updateuser/:id')
+    @Patch('update-user/:id')
     updateUser(@Param('id') id:string, @Body() updatedUserDto: UpdateUserDto){
         return this.authService.updateUser(+id, updatedUserDto)
     }
 
     @UseGuards(JwtAuthGuard)
-    @Patch('updatepassword')
+    @Patch('update-password')
     updatePassword(@Req() req, @Body() updatePasswordDto: UpdatePasswordDto){
         return this.authService.updatePassword(+req.user.userId,updatePasswordDto)
     }
 
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
-    @Delete('deleteuser/:id')
+    @Delete('delete-user/:id')
     async deleteUser(@Param('id') id:string){
         return await this.authService.deleteUser(+id)
     }
