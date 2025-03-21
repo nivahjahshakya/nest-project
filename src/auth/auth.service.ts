@@ -117,4 +117,12 @@ export class AuthService {
     }
   }
 
+  async deleteUser(id:number){
+    const existingUser = await this.findOne(id)
+    if(!existingUser){
+      throw new NotFoundException(`User with id ${id} not found`)
+    }
+    await this.userRepository.softRemove(existingUser)
+    return 'User deleted successfully'
+  }
 }
