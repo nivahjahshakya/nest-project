@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignInUserDto } from './dto/signin-user.dto';
@@ -35,8 +35,8 @@ export class AuthController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @Roles(Role.Admin)
     @Get('get-user')
-    getUser():Promise<User[]>{
-        return this.authService.getUser()
+    getUser(@Query('page') page: number = 1, @Query('limit') limit: number = 10):Promise<Object>{
+        return this.authService.getUser(page,limit)
     }
 
     @UseGuards(JwtAuthGuard,RolesGuard)
