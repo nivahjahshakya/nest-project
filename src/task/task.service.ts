@@ -65,7 +65,8 @@ export class TaskService {
       throw new NotFoundException('Task not found');
     }
     const { title, description, user_id, status } = updateTaskDto;
-    if (user.role === Role.Admin) {
+
+    if (user.role.includes( Role.DepartmentHead )) {
       if (title) existingTask.title = title;
       if (description) existingTask.description = description;
       if (user_id) {

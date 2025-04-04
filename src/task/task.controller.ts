@@ -24,14 +24,14 @@ export class TaskController {
   constructor(private taskService: TaskService) {}
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.DepartmentHead||Role.SuperAdmin)
   @Post('create-task')
   createTask(@Body() createTaskDto: CreateTaskDto): Promise<Task> {
     return this.taskService.createTask(createTaskDto);
   }
 
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.DepartmentHead||Role.SuperAdmin)
   @Get('get-all-tasks')
   getAllTasks(@Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<Object> {
     return this.taskService.getAllTasks(page, limit);
@@ -50,7 +50,7 @@ export class TaskController {
   }
 
   @UseGuards(JwtAuthGuard,RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.DepartmentHead||Role.SuperAdmin)
   @Delete('delete-task/:id')
   deleteTask(@Param('id') id: string): Promise<string> {
     return this.taskService.deleteTask(+id);

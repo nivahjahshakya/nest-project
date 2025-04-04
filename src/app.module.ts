@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtStrategy } from 'auth/strategy/jwt.strategy';
 import { LogginMiddleware } from './logging.middleware';
 import { TaskModule } from 'task/task.module';
+import { DepartmentModule } from './department/department.module';
 
 @Module({
   imports: [
@@ -28,7 +29,8 @@ import { TaskModule } from 'task/task.module';
       })
     }),
     AuthModule,
-    TaskModule
+    TaskModule,
+    DepartmentModule
   ],
   controllers: [],
   providers: [JwtStrategy],

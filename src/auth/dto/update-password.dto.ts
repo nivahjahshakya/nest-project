@@ -1,18 +1,20 @@
 import { Match } from "auth/decorator/match.decorator";
-import {IsDefined, IsNotEmpty,  MinLength } from "class-validator";
+import {IsDefined, IsNotEmpty,  IsString,  Matches,  MinLength } from "class-validator";
 
 export class UpdatePasswordDto{
-    @IsDefined()
+    @IsString()
     @IsNotEmpty()
     @MinLength(8)
     oldPassword: string;
 
-    @IsDefined()
+    @IsString()
     @IsNotEmpty()
-    @MinLength(8)
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, {
+        message: 'Password must be at least 8 characters long, include uppercase, lowercase, number, and special character.',
+      })
     newPassword: string;
 
-    @IsDefined()
+    @IsString()
     @IsNotEmpty()
     @Match('newPassword', {message: 'Password and confirmPassword does not match'})
     confirmPassword: string;
